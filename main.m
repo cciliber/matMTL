@@ -102,6 +102,14 @@ verbose = true;
 % The output kernel learning modality (independent, trace, frobenius, etc.)
 methods = {Train.rls_mtl_dual('ind'),Train.rls_mtl_dual('trace'),Train.rls_mtl_dual('frobenius')};%,Train.rls_mtl('sparse')};%,@okl_wrapper};
 
+% adding also the case of a known matrix A (here just a random matrix
+A = rand(T);
+A = A*A'; % needs to be psd of course
+
+tmp_train_method = Train.rls_mtl_dual('fix');
+methods{end+1} = @(X,Y,lambda) tmp_train_method(X,Y,lambda,A);
+% ----------
+
 time_methods = zeros(numel(methods),1);
 scores_methods = zeros(numel(methods),1);
     
